@@ -200,7 +200,7 @@
       <input class="msg-input" id="msg-input" type="text" placeholder="Ketik pesan…" maxlength="500" autocomplete="off"/>
       <button class="send-btn" id="send-btn" aria-label="Kirim">${ICON_SEND}</button>
     </div>
-    <p class="brand" id="brand-text">Powered by AI</p>
+    <p class="brand" id="brand-text">Powered by Karsa Wave</p>
   </div>
 </div>
 `;
@@ -516,7 +516,7 @@
 
             agentAvatar.textContent = config.agentAvatar || '🤖';
             agentName.textContent   = config.agentName   || 'AI Assistant';
-            brandText.textContent   = config.footerText  || 'Powered by AI';
+            brandText.textContent   = config.footerText  || 'Powered by Karsa Wave';
             if (config.primaryColor) applyTheme(config.primaryColor);
         } catch (err) {
             console.warn('[UMKMWidget] Failed to load config:', err.message);
