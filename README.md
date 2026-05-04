@@ -1,8 +1,6 @@
 # UMKM AI Chat Widget
 
-Widget chat AI untuk website UMKM. Muncul di pojok kanan bawah halaman, seperti Intercom atau Tawk.to, ditenagai Gemini dengan persona dan data produk yang bisa dikonfigurasi sendiri.
-
-Satu server bisa handle banyak bisnis sekaligus, masing-masing punya persona AI, katalog produk, dan warna tema sendiri.
+Widget chat AI untuk website UMKM. Muncul di pojok kanan bawah halaman, ditenagai Gemini dengan persona dan data produk yang bisa dikonfigurasi sendiri. Satu server bisa handle banyak bisnis sekaligus, masing-masing punya persona AI, katalog produk, dan warna tema sendiri.
 
 ---
 
@@ -17,7 +15,7 @@ Satu server bisa handle banyak bisnis sekaligus, masing-masing punya persona AI,
 
 ```bash
 git clone <repo-url>
-cd gemini-flash-api
+cd chatkibot
 npm install
 ```
 
