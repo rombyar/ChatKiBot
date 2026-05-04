@@ -234,3 +234,21 @@ pm2 save
 ```
 
 Setelah deploy, ganti `localhost:3000` di embed code dengan domain server.
+
+---
+
+## 📄 Lisensi / License
+
+Karsa Wave - MIT + Commons Clause
+
+Kode ini bebas digunakan, dimodifikasi, dan didistribusikan. Namun, menjual kode ini sebagai produk utama dalam bentuk asli maupun dengan perubahan minor adalah pelanggaran lisensi. Penjualan hanya diperbolehkan jika kode ini menjadi bagian kecil dari produk yang lebih besar dengan nilai tambah nyata bagi pengguna.
+
+Kode ini disediakan "apa adanya" tanpa jaminan dalam bentuk apapun. Karsa Wave tidak bertanggung jawab atas kerugian yang timbul dari penggunaannya.
+
+---
+
+Karsa Wave - MIT + Commons Clause
+
+Free to use, modify, and distribute. However, selling this code as a primary product original or minimally modified is a license violation. Sale is only permitted when this code is a minor part of a larger product with real added value for the end user.
+
+This code is provided "as is" without any warranty. Karsa Wave is not liable for any damages arising from its use.
