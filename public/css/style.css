@@ -2,7 +2,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary:       #4F46E5;   /* indigo — tombol & bubble user */
+  --primary:       #4F46E5;   /* indigo - tombol & bubble user */
   --primary-dark:  #3730A3;
   --primary-light: #EEF2FF;
 

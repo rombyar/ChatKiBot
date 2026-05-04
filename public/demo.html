@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demo Widget - UMKM AI Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brown: #6F4E37; --brown-light: #F5EFE6;
+      --purple: #7C3AED; --purple-light: #EDE9FE;
+      --text: #1F2937; --muted: #6B7280;
+      --border: #E5E7EB; --surface: #F9FAFB;
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; font-size: 15px; color: var(--text); background: #fff; }
+
+    /* ── Demo switcher ── */
+    .demo-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: #111827; color: #fff; padding: 10px 24px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .demo-bar span { font-size: 12px; color: #9CA3AF; }
+    .demo-btn {
+      padding: 6px 14px; border-radius: 6px; border: 1.5px solid #374151;
+      background: transparent; color: #D1D5DB; font-size: 12px; font-family: inherit;
+      cursor: pointer; transition: all .15s;
+    }
+    .demo-btn:hover  { border-color: #6B7280; color: #fff; }
+    .demo-btn.active { background: #3B82F6; border-color: #3B82F6; color: #fff; }
+    .demo-bar .code-preview {
+      margin-left: auto; font-family: 'Fira Code', monospace; font-size: 11px;
+      color: #86EFAC; background: #1E2837; padding: 5px 12px; border-radius: 6px;
+    }
+
+    /* ── Common layout ── */
+    .site { padding-top: 48px; min-height: 100vh; }
+
+    /* ══════════════════════════════════════════════
+       DEMO 1 - Kedai Kopi Nusantara
+    ══════════════════════════════════════════════ */
+    body.kopi .site { background: #FDFAF6; }
+
+    .kopi-hero {
+      background: linear-gradient(135deg, #3D1F0A 0%, #6F4E37 60%, #8B5E3C 100%);
+      padding: 80px 40px; text-align: center; color: #fff;
+    }
+    .kopi-hero .label {
+      display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: .06em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .kopi-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; line-height: 1.15; margin-bottom: 14px; }
+    .kopi-hero p  { font-size: 16px; color: rgba(255,255,255,.8); max-width: 480px; margin: 0 auto 28px; }
+    .hero-btns    { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary  {
+      padding: 12px 28px; border-radius: 10px; border: none; cursor: pointer;
+      background: #fff; color: #6F4E37; font-size: 14px; font-weight: 600; font-family: inherit;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-outline  {
+      padding: 12px 28px; border-radius: 10px; border: 2px solid rgba(255,255,255,.5);
+      background: transparent; color: #fff; font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: border-color .15s;
+    }
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(0,0,0,.2); transform: translateY(-1px); }
+    .btn-outline:hover  { border-color: rgba(255,255,255,.9); }
+
+    .kopi-section { max-width: 1000px; margin: 0 auto; padding: 64px 24px; }
+    .section-label { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brown); margin-bottom: 8px; }
+    .section-title { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; }
+    .section-sub   { color: var(--muted); max-width: 500px; line-height: 1.6; }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 32px; }
+    .menu-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px; transition: box-shadow .2s, transform .15s;
+    }
+    .menu-card:hover { box-shadow: 0 4px 20px rgba(111,78,55,.12); transform: translateY(-2px); }
+    .menu-emoji { font-size: 32px; margin-bottom: 12px; }
+    .menu-name  { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .menu-desc  { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+    .menu-price { font-size: 16px; font-weight: 700; color: var(--brown); }
+
+    .kopi-footer {
+      background: #1C0D05; color: rgba(255,255,255,.6); text-align: center;
+      padding: 24px; font-size: 13px;
+    }
+    .kopi-footer strong { color: #fff; }
+
+    /* ══════════════════════════════════════════════
+       DEMO 2 - Batik Pesona Jawa
+    ══════════════════════════════════════════════ */
+    body.batik .site { background: #FAF5FF; }
+
+    .batik-hero {
+      background: linear-gradient(135deg, #3B0764 0%, #7C3AED 60%, #9333EA 100%);
+      padding: 80px 40px; text-align: center; color: #fff;
+      position: relative; overflow: hidden;
+    }
+    .batik-pattern {
+      position: absolute; inset: 0; opacity: .06;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M0 20 L20 0 L40 20 L20 40Z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 40px 40px;
+    }
+    .batik-hero > * { position: relative; }
+    .batik-hero .label {
+      display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: .06em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .batik-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; line-height: 1.15; margin-bottom: 14px; }
+    .batik-hero p  { font-size: 16px; color: rgba(255,255,255,.8); max-width: 480px; margin: 0 auto 28px; }
+
+    .btn-batik-primary {
+      padding: 12px 28px; border-radius: 10px; border: none; cursor: pointer;
+      background: #fff; color: var(--purple); font-size: 14px; font-weight: 600; font-family: inherit;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-batik-outline {
+      padding: 12px 28px; border-radius: 10px; border: 2px solid rgba(255,255,255,.5);
+      background: transparent; color: #fff; font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer;
+    }
+    .btn-batik-primary:hover { box-shadow: 0 4px 16px rgba(0,0,0,.2); transform: translateY(-1px); }
+
+    .batik-section { max-width: 1000px; margin: 0 auto; padding: 64px 24px; }
+    .batik-section .section-label { color: var(--purple); }
+
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 32px; }
+    .product-card {
+      background: #fff; border: 1px solid #DDD6FE; border-radius: 14px;
+      padding: 20px; transition: box-shadow .2s, transform .15s;
+    }
+    .product-card:hover { box-shadow: 0 4px 20px rgba(124,58,237,.12); transform: translateY(-2px); }
+    .product-emoji { font-size: 32px; margin-bottom: 12px; }
+    .product-name  { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .product-desc  { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+    .product-price { font-size: 16px; font-weight: 700; color: var(--purple); }
+
+    .batik-footer {
+      background: #1E0B3D; color: rgba(255,255,255,.6); text-align: center;
+      padding: 24px; font-size: 13px;
+    }
+    .batik-footer strong { color: #fff; }
+
+    /* ── Info strip ── */
+    .info-strip {
+      display: flex; gap: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: #fff; flex-wrap: wrap;
+    }
+    .info-item {
+      flex: 1; min-width: 160px; padding: 20px 24px; display: flex; align-items: center; gap: 12px;
+      border-right: 1px solid var(--border);
+    }
+    .info-item:last-child { border-right: none; }
+    .info-icon { font-size: 24px; flex-shrink: 0; }
+    .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+    .info-value { font-size: 13px; font-weight: 600; }
+  </style>
+</head>
+<body class="kopi">
+
+  <!-- Demo switcher bar -->
+  <div class="demo-bar">
+    <span>DEMO WIDGET:</span>
+    <button class="demo-btn active" onclick="switchDemo('kopi', this)">☕ Kedai Kopi</button>
+    <button class="demo-btn" onclick="switchDemo('batik', this)">🌺 Batik Pesona</button>
+    <code class="code-preview" id="embed-code">&lt;script src="/widget/widget.js" data-business-id="kedai-kopi-nusantara"&gt;&lt;/script&gt;</code>
+  </div>
+
+  <!-- ════════════════════ KOPI SITE ════════════════════ -->
+  <div class="site" id="site-kopi">
+
+    <div class="kopi-hero">
+      <div class="label">☕ Kedai Kopi Nusantara</div>
+      <h1>Kopi Terbaik<br>dari Seluruh Nusantara</h1>
+      <p>Nikmati cita rasa autentik kopi single origin pilihan, dari Gayo hingga Flores, langsung di meja kamu.</p>
+      <div class="hero-btns">
+        <button class="btn-primary">Lihat Menu</button>
+        <button class="btn-outline">Tentang Kami</button>
+      </div>
+    </div>
+
+    <div class="info-strip">
+      <div class="info-item">
+        <span class="info-icon">🕐</span>
+        <div><div class="info-label">Jam Buka</div><div class="info-value">07.00 – 22.00</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📍</span>
+        <div><div class="info-label">Lokasi</div><div class="info-value">Menteng, Jakarta Pusat</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🚴</span>
+        <div><div class="info-label">Delivery</div><div class="info-value">GoFood, GrabFood</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">💳</span>
+        <div><div class="info-label">Pembayaran</div><div class="info-value">Cash, QRIS, e-Wallet</div></div>
+      </div>
+    </div>
+
+    <div class="kopi-section">
+      <div class="section-label">Menu Unggulan</div>
+      <h2 class="section-title">Pilihan Kopi Kami</h2>
+      <p class="section-sub">Setiap cangkir dibuat dengan penuh perhatian dari biji kopi pilihan petani lokal.</p>
+      <div class="menu-grid">
+        <div class="menu-card">
+          <div class="menu-emoji">🫘</div>
+          <div class="menu-name">Kopi Arabika Gayo</div>
+          <div class="menu-desc">Single origin Aceh Gayo, profil rasa fruity & bright. Cocok untuk V60 dan pour-over.</div>
+          <div class="menu-price">Rp 28.000</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-emoji">🧊</div>
+          <div class="menu-name">Es Kopi Susu</div>
+          <div class="menu-desc">Espresso premium, susu segar, dan gula aren. Bestseller yang selalu habis sore hari.</div>
+          <div class="menu-price">Rp 25.000</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-emoji">🍶</div>
+          <div class="menu-name">Cold Brew 24 Jam</div>
+          <div class="menu-desc">Diseduh 24 jam, menghasilkan kopi smooth yang tidak asam. Tersedia botol 350ml.</div>
+          <div class="menu-price">Rp 30.000</div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-emoji">📦</div>
+          <div class="menu-name">Kopi Toraja Biji 200g</div>
+          <div class="menu-desc">Biji kopi pilihan siap roast. Cocok dibawa pulang atau dijadikan oleh-oleh.</div>
+          <div class="menu-price">Rp 85.000</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="kopi-footer">
+      <strong>Kedai Kopi Nusantara</strong> · Jl. Kopi Nusantara No. 1, Jakarta · IG: @kedaikopinusantara
+    </footer>
+
+  </div>
+
+  <!-- ════════════════════ BATIK SITE ════════════════════ -->
+  <div class="site" id="site-batik" style="display:none">
+
+    <div class="batik-hero">
+      <div class="batik-pattern"></div>
+      <div class="label">🌺 Batik Pesona Jawa</div>
+      <h1>Warisan Budaya<br>dalam Setiap Helai</h1>
+      <p>Koleksi batik tulis dan cap pilihan dari pengrajin Jogja, tersedia untuk personal, korporat, dan custom seragam.</p>
+      <div class="hero-btns">
+        <button class="btn-batik-primary">Lihat Koleksi</button>
+        <button class="btn-batik-outline">Custom Order</button>
+      </div>
+    </div>
+
+    <div class="info-strip">
+      <div class="info-item">
+        <span class="info-icon">🕐</span>
+        <div><div class="info-label">Jam Buka</div><div class="info-value">Sen–Sab 09.00–17.00</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📍</span>
+        <div><div class="info-label">Lokasi</div><div class="info-value">Malioboro, Yogyakarta</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📦</span>
+        <div><div class="info-label">Pengiriman</div><div class="info-value">Seluruh Indonesia</div></div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🤝</span>
+        <div><div class="info-label">Custom Order</div><div class="info-value">Min. 10 pcs</div></div>
+      </div>
+    </div>
+
+    <div class="batik-section">
+      <div class="section-label">Koleksi Pilihan</div>
+      <h2 class="section-title">Batik Nusantara</h2>
+      <p class="section-sub">Setiap kain bercerita tentang kekayaan budaya yang diwariskan turun-temurun dari tangan pengrajin Jogja.</p>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-emoji">🎨</div>
+          <div class="product-name">Batik Tulis Mega Mendung</div>
+          <div class="product-desc">Motif Cirebon klasik, pewarna alami, 2.5m × 1.1m</div>
+          <div class="product-price">Rp 450.000</div>
+        </div>
+        <div class="product-card">
+          <div class="product-emoji">👔</div>
+          <div class="product-name">Kemeja Batik Pria</div>
+          <div class="product-desc">Motif truntum, kawung, lereng. Size S–XXL tersedia</div>
+          <div class="product-price">Rp 220.000</div>
+        </div>
+        <div class="product-card">
+          <div class="product-emoji">👗</div>
+          <div class="product-name">Dress Batik Wanita</div>
+          <div class="product-desc">Fit A-line, motif sekar jagad. Ukuran S–XL</div>
+          <div class="product-price">Rp 280.000</div>
+        </div>
+        <div class="product-card">
+          <div class="product-emoji">👜</div>
+          <div class="product-name">Tas Batik Kanvas</div>
+          <div class="product-desc">Tote bag motif batik, cocok untuk souvenir & oleh-oleh</div>
+          <div class="product-price">Rp 120.000</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="batik-footer">
+      <strong>Batik Pesona Jawa</strong> · Jl. Malioboro No. 88, Yogyakarta · IG: @batikpesonajawa
+    </footer>
+
+  </div>
+
+  <script>
+    // ── Demo switcher logic ──────────────────────────────────────────────────
+    const demos = {
+      kopi:  { site: 'site-kopi',  bodyClass: 'kopi',  businessId: 'kedai-kopi-nusantara' },
+      batik: { site: 'site-batik', bodyClass: 'batik', businessId: 'batik-pesona-jawa'    },
+    };
+
+    let currentWidget = null;
+
+    function loadWidget(businessId) {
+      const old = document.getElementById('umkm-chat-widget');
+      if (old) old.remove();
+      const s = document.createElement('script');
+      // timestamp agar browser selalu re-execute (bukan pakai cached instance lama)
+      s.src = `/widget/widget.js?v=${Date.now()}`;
+      s.setAttribute('data-business-id', businessId);
+      document.body.appendChild(s);
+    }
+
+    function switchDemo(key, btn) {
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const d = demos[key];
+      document.body.className = d.bodyClass;
+      Object.values(demos).forEach(x => {
+        document.getElementById(x.site).style.display = x.site === d.site ? '' : 'none';
+      });
+
+      document.getElementById('embed-code').textContent =
+        `<script src="/widget/widget.js" data-business-id="${d.businessId}"><\/script>`;
+
+      loadWidget(d.businessId);
+    }
+
+    // Load initial widget on page ready
+    document.addEventListener('DOMContentLoaded', () => loadWidget('kedai-kopi-nusantara'));
+  </script>
+
+</body>
+</html>
