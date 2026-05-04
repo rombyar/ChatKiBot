@@ -1,5 +1,12 @@
 import { genAI, GEMINI_MODEL } from '../config/gemini.js';
-import { getConfig, getPublicConfig } from '../config/businesses.js';
+import { businesses, getConfig, getPublicConfig } from '../config/businesses.js';
+
+export function getBusinessList(_req, res) {
+    const list = Object.values(businesses).map(({ businessId, businessName, agentName, agentAvatar, primaryColor, welcomeMessage, footerText }) => ({
+        businessId, businessName, agentName, agentAvatar, primaryColor, welcomeMessage, footerText,
+    }));
+    res.json(list);
+}
 
 export function getWidgetConfig(req, res) {
     const config = getPublicConfig(req.params.businessId);

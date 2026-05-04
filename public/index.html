@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kopi Bot - Asisten UMKM Kopi</title>
+  <title>ChatKiBot - Asisten UMKM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,9 +13,8 @@
 
   <div class="page-bg">
 
-    <div class="chat-card">
-
-      <!-- Header -->
+    <!-- ── Selector Screen ── -->
+    <div id="selector-screen" class="chat-card selector-card">
       <header class="chat-header">
         <div class="bot-avatar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -27,19 +26,42 @@
           </svg>
         </div>
         <div class="header-info">
-          <span class="header-name">Rina - CS Kedai Kopi ☕</span>
+          <span class="header-name">ChatKiBot</span>
+          <span class="header-sub">Pilih tipe usaha untuk mulai chat</span>
+        </div>
+        <div class="header-badge">AI</div>
+      </header>
+
+      <main id="business-list" class="selector-list">
+        <div class="selector-loading">Memuat daftar usaha…</div>
+      </main>
+
+      <footer class="chat-footer">
+        <p class="footer-note">Pilih salah satu UMKM di atas · Powered by Gemini AI</p>
+      </footer>
+    </div>
+
+    <!-- ── Chat Screen ── -->
+    <div id="chat-screen" class="chat-card" style="display:none">
+      <header class="chat-header">
+        <div id="chat-avatar" class="bot-avatar"></div>
+        <div class="header-info">
+          <span id="chat-header-name" class="header-name"></span>
           <span class="header-sub">
             <span class="status-dot"></span>
             <span id="header-status">Siap membantu</span>
           </span>
         </div>
-        <div class="header-badge">AI</div>
+        <button id="back-btn" class="back-btn" aria-label="Kembali">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
       </header>
 
-      <!-- Messages -->
       <main id="chat-box" class="chat-messages"></main>
 
-      <!-- Input -->
       <footer class="chat-footer">
         <form id="chat-form" class="input-row">
           <input
@@ -58,9 +80,8 @@
             </svg>
           </button>
         </form>
-        <p class="footer-note">Kedai Kopi Nusantara · Didukung Gemini AI</p>
+        <p id="chat-footer-note" class="footer-note"></p>
       </footer>
-
     </div>
 
   </div>
