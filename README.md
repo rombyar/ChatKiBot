@@ -1,6 +1,40 @@
-# UMKM AI Chat Widget
+# ChatKiBot
 
 Widget chat AI untuk website UMKM. Muncul di pojok kanan bawah halaman, ditenagai Gemini dengan persona dan data produk yang bisa dikonfigurasi sendiri. Satu server bisa handle banyak bisnis sekaligus, masing-masing punya persona AI, katalog produk, dan warna tema sendiri.
+
+---
+
+## Demo
+
+**Halaman utama**, pilih bisnis sebelum mulai chat:
+
+![ChatKiBot Main](docs/img/ChatKiBot-main.png)
+
+**Tampilan chat di web:**
+
+<table>
+  <tr>
+    <td><img src="docs/img/ChatKiBot-umkm-01.png" alt="Chat Kedai Kopi Nusantara" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-umkm-02.png" alt="Chat Batik Pesona Jawa" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center">Kedai Kopi Nusantara · Rina</td>
+    <td align="center">Batik Pesona Jawa · Dewi</td>
+  </tr>
+</table>
+
+**Widget embed di website:**
+
+<table>
+  <tr>
+    <td><img src="docs/img/ChatKiBot-chatlive-01.png" alt="Widget Kedai Kopi Nusantara" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-chatlive-02.png" alt="Widget Batik Pesona Jawa" width="240"/></td>
+  </tr>
+  <tr>
+    <td align="center">Kedai Kopi Nusantara</td>
+    <td align="center">Batik Pesona Jawa</td>
+  </tr>
+</table>
 
 ---
 
@@ -37,7 +71,7 @@ Jalankan:
 npm start
 ```
 
-Buka `http://localhost:3000/demo.html`, ada dua contoh bisnis (Kedai Kopi dan Toko Batik) yang sudah siap dicoba.
+Buka `http://localhost:3000`, ada selector untuk memilih bisnis (Kedai Kopi dan Toko Batik) yang sudah siap dicoba. Atau buka `http://localhost:3000/demo.html` untuk preview widget langsung.
 
 ---
 
@@ -46,10 +80,14 @@ Buka `http://localhost:3000/demo.html`, ada dua contoh bisnis (Kedai Kopi dan To
 Taruh ini sebelum `</body>`:
 
 ```html
-<script src="http://localhost:3000/widget/widget.js" data-business-id="kedai-kopi-nusantara"></script>
+<script
+  src="http://localhost:3000/widget/widget.js"
+  data-business-id="kedai-kopi-nusantara"
+  data-api-url="http://localhost:3000">
+</script>
 ```
 
-Ganti `localhost:3000` dengan domain server setelah deploy, dan `kedai-kopi-nusantara` dengan ID bisnis yang sesuai. Widget langsung muncul tanpa perlu tambah CSS atau HTML lain.
+Ganti `localhost:3000` dengan domain server setelah deploy, dan `kedai-kopi-nusantara` dengan ID bisnis yang sesuai. Atribut `data-api-url` wajib diisi saat domain widget berbeda dari domain server. Widget langsung muncul tanpa perlu tambah CSS atau HTML lain.
 
 ---
 
@@ -66,6 +104,7 @@ Edit `src/config/businesses.js`, copy salah satu blok yang sudah ada, dan sesuai
     primaryColor: '#16A34A',
     welcomeMessage: 'Halo! Ada yang bisa dibantu?',
     footerText: 'Nama Toko · Powered by AI',
+    sessionTtlMinutes: 60,
 
     persona: `Kamu adalah Sari, CS Nama Toko.
 Ramah, to the point, dan paham produk toko ini luar dalam.
@@ -108,7 +147,7 @@ Yang bisa diatur:
 ├── index.js
 ├── src/
 │   ├── config/
-│   │   ├── gemini.js               # inisialisasi Gemini SDK
+│   │   ├── gemini.js               # inisialisasi Gemini SDK (model: gemini-2.5-flash)
 │   │   └── businesses.js           # konfigurasi semua bisnis
 │   ├── controllers/
 │   │   ├── generateController.js
@@ -117,8 +156,12 @@ Yang bisa diatur:
 │       ├── generate.js
 │       └── widget.js
 └── public/
-    ├── index.html
-    ├── demo.html
+    ├── index.html                  # halaman utama dengan selector bisnis
+    ├── demo.html                   # preview widget embed
+    ├── css/
+    │   └── style.css
+    ├── js/
+    │   └── script.js
     └── widget/
         └── widget.js               # script embeddable
 ```
@@ -129,11 +172,13 @@ Yang bisa diatur:
 
 | Method | URL | Keterangan |
 |--------|-----|------------|
+| `GET` | `/widget/businesses` | Daftar semua bisnis yang terdaftar |
 | `GET` | `/widget/config/:businessId` | Config publik bisnis (nama, warna, avatar) |
-| `POST` | `/widget/chat` | Kirim pesan ke AI |
+| `POST` | `/widget/chat` | Kirim pesan teks ke AI |
+| `POST` | `/widget/chat/file` | Kirim pesan + file (gambar/PDF/audio) ke AI |
 | `POST` | `/generate-text` | Generate teks bebas |
 
-### Contoh request
+### Contoh request, chat teks
 
 ```js
 fetch('http://localhost:3000/widget/chat', {
@@ -155,6 +200,24 @@ fetch('http://localhost:3000/widget/chat', {
 ```
 
 Untuk multi-turn, kirim semua history di array `messages`. Server otomatis potong di 20 pesan terakhir.
+
+### Contoh request, chat dengan file
+
+```js
+const form = new FormData();
+form.append('businessId', 'kedai-kopi-nusantara');
+form.append('messages', JSON.stringify([
+    { role: 'user', content: 'Ini gambar produk kami, bisa bantu buat deskripsinya?' }
+]));
+form.append('file', fileInput.files[0]); // gambar, PDF, atau audio
+
+fetch('http://localhost:3000/widget/chat/file', {
+    method: 'POST',
+    body: form,
+})
+```
+
+Tipe file yang didukung: gambar (JPEG/PNG/GIF/WEBP), PDF, dan audio (MP3/WAV/OGG/AAC/FLAC/WEBM). Ukuran maksimum 10 MB.
 
 ---
 
