@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/generate-text", "destination": "/api" },
+    { "source": "/generate-image", "destination": "/api" },
+    { "source": "/generate-document", "destination": "/api" },
+    { "source": "/generate-audio", "destination": "/api" },
+    { "source": "/widget/businesses", "destination": "/api" },
+    { "source": "/widget/config/:businessId", "destination": "/api" },
+    { "source": "/widget/chat", "destination": "/api" },
+    { "source": "/widget/chat/file", "destination": "/api" }
+  ]
+}
