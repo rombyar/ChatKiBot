@@ -1,47 +1,47 @@
 # ChatKiBot
 
-Widget chat AI untuk website UMKM. Muncul di pojok kanan bawah halaman, ditenagai Gemini dengan persona dan data produk yang bisa dikonfigurasi sendiri. Satu server bisa handle banyak bisnis sekaligus, masing-masing punya persona AI, katalog produk, dan warna tema sendiri.
+AI-powered chat widget for SME websites. It appears in the bottom-right corner of the page, powered by Gemini, with fully customizable persona and product data. A single server can handle multiple businesses, each with its own AI persona, product catalog, and theme.
 
 ---
 
 ## Demo
 
-**Halaman utama**, pilih bisnis sebelum mulai chat:
+**Main page** – select a business before starting the chat:
 
 ![ChatKiBot Main](docs/img/ChatKiBot-main.png)
 
-**Tampilan chat di web:**
+**Chat interface:**
 
 <table>
   <tr>
-    <td><img src="docs/img/ChatKiBot-umkm-01.png" alt="Chat Kedai Kopi Nusantara" width="240"/></td>
-    <td><img src="docs/img/ChatKiBot-umkm-02.png" alt="Chat Batik Pesona Jawa" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-umkm-01.png" alt="Chat Coffee Shop" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-umkm-02.png" alt="Chat Batik Store" width="240"/></td>
   </tr>
   <tr>
-    <td align="center">Kedai Kopi Nusantara · Rina</td>
-    <td align="center">Batik Pesona Jawa · Dewi</td>
+    <td align="center">Coffee Shop · Rina</td>
+    <td align="center">Batik Store · Dewi</td>
   </tr>
 </table>
 
-**Widget embed di website:**
+**Embedded widget:**
 
 <table>
   <tr>
-    <td><img src="docs/img/ChatKiBot-chatlive-01.png" alt="Widget Kedai Kopi Nusantara" width="240"/></td>
-    <td><img src="docs/img/ChatKiBot-chatlive-02.png" alt="Widget Batik Pesona Jawa" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-chatlive-01.png" alt="Widget Coffee Shop" width="240"/></td>
+    <td><img src="docs/img/ChatKiBot-chatlive-02.png" alt="Widget Batik Store" width="240"/></td>
   </tr>
   <tr>
-    <td align="center">Kedai Kopi Nusantara</td>
-    <td align="center">Batik Pesona Jawa</td>
+    <td align="center">Coffee Shop</td>
+    <td align="center">Batik Store</td>
   </tr>
 </table>
 
 ---
 
-## Requirement
+## Requirements
 
 - Node.js 18+
-- Gemini API Key (gratis di [Google AI Studio](https://aistudio.google.com))
+- Gemini API Key (free via Google AI Studio)
 
 ---
 
@@ -53,102 +53,110 @@ cd chatkibot
 npm install
 ```
 
-Buat file `.env` dari contoh yang sudah ada:
+Create `.env` from the example:
 
 ```bash
 cp .env.example .env
 ```
 
-Isi API key di `.env`:
+Add your API key:
 
 ```
-GEMINI_API_KEY=isi_api_key_di_sini
+GEMINI_API_KEY=your_api_key_here
 ```
 
-Jalankan:
+Run the app:
 
 ```bash
 npm start
 ```
 
-Buka `http://localhost:3000`, ada selector untuk memilih bisnis (Kedai Kopi dan Toko Batik) yang sudah siap dicoba. Atau buka `http://localhost:3000/demo.html` untuk preview widget langsung.
+Open `http://localhost:3000`.
+
+- Main page includes a business selector (Coffee Shop & Batik Store ready to try)
+- Or open `http://localhost:3000/demo.html` to preview the widget directly
 
 ---
 
-## Pasang di website
+## Embed on Your Website
 
-Taruh ini sebelum `</body>`:
+Place this before `</body>`:
 
 ```html
 <script
   src="http://localhost:3000/widget/widget.js"
-  data-business-id="kedai-kopi-nusantara"
+  data-business-id="coffee-shop"
   data-api-url="http://localhost:3000">
 </script>
 ```
 
-Ganti `localhost:3000` dengan domain server setelah deploy, dan `kedai-kopi-nusantara` dengan ID bisnis yang sesuai. Atribut `data-api-url` wajib diisi saat domain widget berbeda dari domain server. Widget langsung muncul tanpa perlu tambah CSS atau HTML lain.
+Notes:
+- Replace `localhost:3000` with your production domain
+- Replace `coffee-shop` with your business ID
+- `data-api-url` is required if the widget runs on a different domain
+
+The widget loads automatically—no additional HTML or CSS needed.
 
 ---
 
-## Tambah bisnis baru
+## Add a New Business
 
-Edit `src/config/businesses.js`, copy salah satu blok yang sudah ada, dan sesuaikan:
+Edit `src/config/businesses.js` and duplicate an existing block:
 
 ```js
-'nama-bisnis': {
-    businessId: 'nama-bisnis',
-    businessName: 'Nama Toko',
+'business-id': {
+    businessId: 'business-id',
+    businessName: 'Store Name',
     agentName: 'Sari',
     agentAvatar: '🛍️',
     primaryColor: '#16A34A',
-    welcomeMessage: 'Halo! Ada yang bisa dibantu?',
-    footerText: 'Nama Toko · Powered by AI',
+    welcomeMessage: 'Hi! How can I help you?',
+    footerText: 'Store Name · Powered by AI',
     sessionTtlMinutes: 60,
 
-    persona: `Kamu adalah Sari, CS Nama Toko.
-Ramah, to the point, dan paham produk toko ini luar dalam.
-Pakai bahasa santai. Jangan bertele-tele.`,
+    persona: `You are Sari, a customer support agent for Store Name.
+Friendly, concise, and deeply knowledgeable about the products.
+Use a casual tone. Avoid long-winded responses.`,
 
     products: [
-        { name: 'Nama Produk', price: 50000, unit: 'pcs', stock: 30, description: 'Deskripsi singkat' },
+        { name: 'Product Name', price: 50000, unit: 'pcs', stock: 30, description: 'Short description' },
     ],
 
     businessInfo: {
-        hours: 'Senin–Sabtu 08.00–17.00',
-        location: 'Alamat toko',
+        hours: 'Mon–Sat 08:00–17:00',
+        location: 'Store address',
         phone: '0812-xxxx-xxxx',
-        instagram: '@namatoko',
-        payment: 'Transfer, QRIS',
+        instagram: '@storehandle',
+        payment: 'Bank transfer, QRIS',
     },
 },
 ```
 
-Simpan, restart server, dan widget sudah siap dipakai.
+Restart the server and the widget is ready.
 
 ---
 
-## Persona AI
+## AI Persona
 
-Field `persona` adalah instruksi bebas yang langsung dikirim ke Gemini. Semakin spesifik, semakin konsisten perilaku AI-nya.
+The `persona` field is a free-form instruction sent directly to Gemini. The more specific it is, the more consistent the AI behavior.
 
-Yang bisa diatur:
-- **Identitas**: nama, latar belakang ("udah 5 tahun kerja di sini")
-- **Gaya bicara**: formal, santai, pakai sapaan Kak/Bang, dll.
-- **Skenario produk habis**: tawarkan alternatif, minta WA customer, dll.
-- **Batasan topik**: hanya soal produk, atau boleh lebih luas
-- **Closing**: arahkan ke WA, telepon, atau kunjungan langsung
+You can define:
+- **Identity**: name, background ("5 years of experience")
+- **Tone**: formal, casual, friendly, etc.
+- **Out-of-stock handling**: suggest alternatives, redirect to WhatsApp, etc.
+- **Scope**: product-only vs general conversation
+- **Closing strategy**: lead to WhatsApp, phone, or store visit
 
 ---
 
-## Struktur project
+## Project Structure
 
 ```
 ├── index.js
 ├── src/
 │   ├── config/
-│   │   ├── gemini.js               # inisialisasi Gemini SDK (model: gemini-2.5-flash)
-│   │   └── businesses.js           # konfigurasi semua bisnis
+│   │   ├── gemini.js
+│   │   └── businesses.js
 │   ├── controllers/
 │   │   ├── generateController.js
 │   │   └── widgetController.js
@@ -156,60 +164,64 @@ Yang bisa diatur:
 │       ├── generate.js
 │       └── widget.js
 └── public/
-    ├── index.html                  # halaman utama dengan selector bisnis
-    ├── demo.html                   # preview widget embed
+    ├── index.html
+    ├── demo.html
     ├── css/
     │   └── style.css
     ├── js/
     │   └── script.js
     └── widget/
-        └── widget.js               # script embeddable
+        └── widget.js
 ```
 
 ---
 
 ## API
 
-| Method | URL | Keterangan |
-|--------|-----|------------|
-| `GET` | `/widget/businesses` | Daftar semua bisnis yang terdaftar |
-| `GET` | `/widget/config/:businessId` | Config publik bisnis (nama, warna, avatar) |
-| `POST` | `/widget/chat` | Kirim pesan teks ke AI |
-| `POST` | `/widget/chat/file` | Kirim pesan + file (gambar/PDF/audio) ke AI |
-| `POST` | `/generate-text` | Generate teks bebas |
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/widget/businesses` | List all businesses |
+| GET | `/widget/config/:businessId` | Public business config |
+| POST | `/widget/chat` | Send text message |
+| POST | `/widget/chat/file` | Send message with file |
+| POST | `/generate-text` | Generate free-form text |
 
-### Contoh request, chat teks
+### Example: Text Chat
 
 ```js
 fetch('http://localhost:3000/widget/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-        businessId: 'kedai-kopi-nusantara',
+        businessId: 'coffee-shop',
         messages: [
-            { role: 'user', content: 'Kopi apa yang paling laris?' }
+            { role: 'user', content: 'What is your best-selling coffee?' }
         ]
     })
 })
 ```
 
+Response:
+
 ```json
 {
-    "response": "Es Kopi Susu kami yang paling laku, hampir tiap hari habis sebelum sore hehe..."
+    "response": "Our iced milk coffee is the best seller, usually sold out before evening..."
 }
 ```
 
-Untuk multi-turn, kirim semua history di array `messages`. Server otomatis potong di 20 pesan terakhir.
+Multi-turn: send full message history (auto-trimmed to last 20 messages).
 
-### Contoh request, chat dengan file
+---
+
+### Example: Chat with File
 
 ```js
 const form = new FormData();
-form.append('businessId', 'kedai-kopi-nusantara');
+form.append('businessId', 'coffee-shop');
 form.append('messages', JSON.stringify([
-    { role: 'user', content: 'Ini gambar produk kami, bisa bantu buat deskripsinya?' }
+    { role: 'user', content: 'Here is our product image, can you write a description?' }
 ]));
-form.append('file', fileInput.files[0]); // gambar, PDF, atau audio
+form.append('file', fileInput.files[0]);
 
 fetch('http://localhost:3000/widget/chat/file', {
     method: 'POST',
@@ -217,38 +229,41 @@ fetch('http://localhost:3000/widget/chat/file', {
 })
 ```
 
-Tipe file yang didukung: gambar (JPEG/PNG/GIF/WEBP), PDF, dan audio (MP3/WAV/OGG/AAC/FLAC/WEBM). Ukuran maksimum 10 MB.
+Supported file types:
+- Images: JPEG, PNG, GIF, WEBP
+- PDF
+- Audio: MP3, WAV, OGG, AAC, FLAC, WEBM
+
+Max size: 10 MB
 
 ---
 
-## Deploy
+## Deployment
 
-Tidak ada config khusus. Pastikan `GEMINI_API_KEY` tersedia di environment server, lalu `npm start`.
+No special configuration required.
 
-Untuk production, pakai PM2:
+Ensure `GEMINI_API_KEY` is set, then:
+
+```bash
+npm start
+```
+
+For production (PM2):
 
 ```bash
 npm install -g pm2
-pm2 start index.js --name umkm-widget
+pm2 start index.js --name chatkibot
 pm2 save
 ```
 
-Setelah deploy, ganti `localhost:3000` di embed code dengan domain server.
+Update the embed script with your production domain.
 
 ---
 
-## 📄 Lisensi / License
+## License
 
-Karsa Wave - MIT + Commons Clause
+Karsa Wave — MIT + Commons Clause
 
-Kode ini bebas digunakan, dimodifikasi, dan didistribusikan. Namun, menjual kode ini sebagai produk utama dalam bentuk asli maupun dengan perubahan minor adalah pelanggaran lisensi. Penjualan hanya diperbolehkan jika kode ini menjadi bagian kecil dari produk yang lebih besar dengan nilai tambah nyata bagi pengguna.
-
-Kode ini disediakan "apa adanya" tanpa jaminan dalam bentuk apapun. Karsa Wave tidak bertanggung jawab atas kerugian yang timbul dari penggunaannya.
-
----
-
-Karsa Wave - MIT + Commons Clause
-
-Free to use, modify, and distribute. However, selling this code as a primary product original or minimally modified is a license violation. Sale is only permitted when this code is a minor part of a larger product with real added value for the end user.
+Free to use, modify, and distribute. However, selling this code as a primary product (original or minimally modified) is a license violation. Sale is only permitted when this code is a minor part of a larger product with real added value.
 
 This code is provided "as is" without any warranty. Karsa Wave is not liable for any damages arising from its use.
